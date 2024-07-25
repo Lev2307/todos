@@ -4,7 +4,6 @@ import Navbar from "@/app/ui/navbar";
 export default function Home() {
   return (
     <section>
-      <Navbar />
       <main className="flex justify-center items-center h-screen relative">
         <div className="flex justify-around items-center gap-20">
           <p className="text-slate-800 text-lg tracking-wide w-96 text-center leading-6">
