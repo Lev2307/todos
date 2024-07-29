@@ -13,7 +13,7 @@ type User = {
     password: string;
 }
 
-async function getUser(email: string) {
+export async function getUser(email: string) {
     // получение пользователя из бд по почте
     try {
         const user = await sql<User>`SELECT * FROM users WHERE email=${email}`;
@@ -41,7 +41,6 @@ async function getUser(email: string) {
             const passwordMatch = await bcrypt.compare(password, user.password)
             if (passwordMatch) return user;
           }
-          console.log('Invalid credentials');
           return null;
         },
       }),

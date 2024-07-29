@@ -3,22 +3,31 @@
 import Link from "next/link";
 import Logo from "@/app/ui/logo";
 import { Button } from "./button";
-import { auth } from "@/auth"
 import { logoutAction } from "../lib/actions";
+import { Session } from "next-auth";
+import { ReactNode } from "react";
 
-export default function Navbar({isSignedIn} : {isSignedIn: boolean}) {
+interface NavbarProps {
+    isSignedIn: boolean;
+    username: string | null | undefined;
+  }
+
+export default function Navbar({isSignedIn, username}: NavbarProps) {
     if (isSignedIn) {
         return (
-            <nav className="flex items-center justify-around">
+            <nav className="flex items-center justify-around mt-2">
                 <Logo />
-                <form action={logoutAction}>
-                    <Button>Sign Out</Button>
-                </form>
+                <div className="flex flex-row justify-center items-center gap-10">
+                    <span>{ username }</span>
+                    <form action={logoutAction}>
+                        <Button>Sign Out</Button>
+                    </form>
+                </div>
             </nav>
         )
     } else {
         return (
-            <nav className="flex items-center justify-around">
+            <nav className="flex items-center justify-around mt-2">
                 <Logo />
                 <ul className="flex items-center gap-10">
                     <li className="hover:underline hover:text-teal-600">
