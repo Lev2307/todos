@@ -10,8 +10,6 @@ import { redirect } from 'next/navigation';
 import { signIn, signOut } from '@/auth';
 import { getUser } from '@/auth'
 
-
-
 const RegistrationFormSchema = z.object({
   name: z.string(),
   email: z.string().email(),
@@ -20,22 +18,26 @@ const RegistrationFormSchema = z.object({
 });
 
 
-export async function authenticate(prevState: string | undefined, formData: FormData) {
+export async function authenticate(prevState: any, formData: FormData) {
+  let errorOccured = false;
   try {
     await signIn('credentials', formData);
   } catch (error) {
     if (error instanceof AuthError) {
+      errorOccured = true;
       switch (error.type) {
-        case 'CredentialsSignin':
+        case 'CallbackRouteError':
           return 'Invalid credentials.';
-        default:
-          return 'Something went wrong.';
       }
     }
     throw error;
+  } finally {
+    if (errorOccured === false) {
+      redirect('/todos');
+    }
   }
 }
-export async function createUser(prevState: string | undefined, formData: FormData) {
+export async function createUser(prevState: any, formData: FormData) {
   const userData = RegistrationFormSchema.safeParse({
     name: formData.get('name'),
     email: formData.get('email'),
@@ -47,8 +49,9 @@ export async function createUser(prevState: string | undefined, formData: FormDa
     // check that user with entered email doesn`t exist
     const user_existed_with_entered_email = await getUser(email);
     if (user_existed_with_entered_email) {
-      return 'This email has been already taken.';
+      return { message: 'This email has been already taken.'};
     }
+
     // check two entered passwords are the same
     if (password === password_confirmation) {
       const uuid = crypto.randomUUID();
@@ -60,7 +63,7 @@ export async function createUser(prevState: string | undefined, formData: FormDa
         return { message: 'Database Error: Failed to Create user.' };
       }
     } else {
-      return 'Two password didn`t match.';
+      return { message: 'Two passwords didn`t match.' };
     }
   }
   revalidatePath('/auth/login')

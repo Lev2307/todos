@@ -9,7 +9,7 @@ import { ReactNode } from "react";
 
 interface NavbarProps {
     isSignedIn: boolean;
-    username: string | null | undefined;
+    username: string | null | undefined; 
   }
 
 export default function Navbar({isSignedIn, username}: NavbarProps) {

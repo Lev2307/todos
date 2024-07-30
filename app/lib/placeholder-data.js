@@ -6,3 +6,22 @@ export const users = [
         password: '123321',
     },
   ];
+
+export const tags = [
+    {
+        id: 1,
+        title: 'music',
+    },
+    {
+        id: 2, 
+        title: 'sport'
+    },
+    {
+        id: 3,
+        title: 'shopping'
+    },
+    {
+        id: 4,
+        title: 'studying'
+    }
+]

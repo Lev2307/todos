@@ -15,7 +15,7 @@ export default async function RootLayout({children}: Readonly<{children: React.R
   let username;
   if (session) {
     isSignedIn = true;
-    username = session?.user?.name;
+    username = session.user?.name;
   }
   return (
       <html lang="en">
