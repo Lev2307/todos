@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import "@/app/ui/globals.css";
-import { inter } from "@/app/ui/fonts";
+import { poppins } from "@/app/ui/fonts";
 import Navbar from "./ui/navbar";
 import { auth } from "@/auth";
+
  
 export const metadata: Metadata = {
   title: "Todos App",
@@ -19,7 +20,7 @@ export default async function RootLayout({children}: Readonly<{children: React.R
   }
   return (
       <html lang="en">
-        <body className={`${inter.className} overflow-hidden`}>
+        <body className={`${poppins.className} overflow-hidden`}>
           <Navbar isSignedIn={isSignedIn} username={username} />
           {children}
         </body>

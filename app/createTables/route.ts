@@ -49,23 +49,31 @@ async function createTodosTable() {
     await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
     await client.sql`CREATE TABLE IF NOT EXISTS todos (
         id UUID DEFAULT uuid_generate_v4(),
-        authorID UUID NOT NULL,
+        author_id UUID NOT NULL,
+        is_complited BOOLEAN NOT NULL,
         tag VARCHAR(15) NOT NULL,
+        title VARCHAR(50) NOT NULL,
         text VARCHAR(255) NOT NULL,
+        due_time TIMESTAMP NOT NULL,
         created_time TIMESTAMP NOT NULL,
         PRIMARY KEY (id)
     )`;
 }
 
+// async function removeTodosTable() {
+//   await client.sql`DROP TABLE todos`;
+// }
+
 export async function GET() {
     try {
       await client.sql`BEGIN`;
-    //   await createTagsTable();
-    //   await createTodosTable();
-    // await createUsersTable();
+      // await createTagsTable();
+      // await createTodosTable();
+      // await createUsersTable();
+      // await removeTodosTable();
       await client.sql`COMMIT`;
   
-      return Response.json({ message: 'Database seeded successfully' });
+      return Response.json({ message: 'Database created successfully' });
     } catch (error) {
       await client.sql`ROLLBACK`;
       return Response.json({ error }, { status: 500 });

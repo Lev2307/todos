@@ -13,7 +13,7 @@ type User = {
     password: string;
 }
 
-export async function getUser(email: string) {
+export async function getUser(email: string | null | undefined) {
     // получение пользователя из бд по почте
     try {
         const user = await sql<User>`SELECT * FROM users WHERE email=${email}`;
