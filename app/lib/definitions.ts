@@ -6,6 +6,7 @@ export type TagField = {
 export type TodoField = {
     id: string,
     author_id: string,
+    tag: string, 
     is_complited: boolean,
     title: string,
     text: string,

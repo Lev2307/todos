@@ -1,8 +1,8 @@
 "use client";
 
 import { TagIcon } from "@heroicons/react/20/solid";
-import { TagField } from "../lib/definitions";
-import { Button } from "./button";
+import { TagField } from "../../lib/definitions";
+import { Button } from "../button";
 import { useFormState } from "react-dom";
 import { createTodo } from "@/app/lib/actions";
 import { ExclamationCircleIcon } from "@heroicons/react/16/solid";
@@ -13,7 +13,6 @@ export default async function CreateTodoForm({tags, session}: {tags: TagField[],
     const user_email = session?.user?.email
     const createTodoAction = createTodo.bind(null, user_email);
     const [errorMessage, formAction] = useFormState(createTodoAction, undefined)
-    console.log(new Date().toLocaleString());
     return (
         <form action={formAction} className="w-1/2">
             <div className="mt-4">

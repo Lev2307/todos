@@ -1,4 +1,4 @@
-import CreateTodoForm from '@/app/ui/createtodoForm';
+import CreateTodoForm from '@/app/ui/todos/createtodoForm';
 import { fetchTags } from '@/app/lib/data';
 import { auth } from '@/auth';
 export default async function Page() {
