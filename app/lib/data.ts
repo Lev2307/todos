@@ -27,7 +27,7 @@ export async function fetchTodos(user_email: string | null | undefined) {
     try {
         // get Todos, filtered by session user and todo completion
         const db_call = await client.sql<TodoField>`
-        SELECT * FROM todos WHERE author_id=${userID} AND is_complited=${false}
+        SELECT * FROM todos WHERE author_id=${userID}
         `
         const todos = db_call.rows;
         return todos;

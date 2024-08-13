@@ -50,7 +50,8 @@ async function createTodosTable() {
     await client.sql`CREATE TABLE IF NOT EXISTS todos (
         id UUID DEFAULT uuid_generate_v4(),
         author_id UUID NOT NULL,
-        is_complited BOOLEAN NOT NULL,
+        is_active BOOLEAN NOT NULL DEFAULT TRUE,
+        finished BOOLEAN NOT NULL DEFAULT FALSE,
         tag VARCHAR(15) NOT NULL,
         title VARCHAR(50) NOT NULL,
         text VARCHAR(255) NOT NULL,
@@ -60,9 +61,9 @@ async function createTodosTable() {
     )`;
 }
 
-// async function removeTodosTable() {
-//   await client.sql`DROP TABLE todos`;
-// }
+async function removeTodosTable() {
+  await client.sql`DROP TABLE todos`;
+}
 
 export async function GET() {
     try {
@@ -71,6 +72,7 @@ export async function GET() {
       // await createTodosTable();
       // await createUsersTable();
       // await removeTodosTable();
+      
       await client.sql`COMMIT`;
   
       return Response.json({ message: 'Database created successfully' });

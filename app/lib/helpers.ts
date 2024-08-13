@@ -1,5 +1,3 @@
-
-
 export function DueTimeValidation(due_time: string) {
     const due_time_validation = new Date(due_time);
     const now = new Date();

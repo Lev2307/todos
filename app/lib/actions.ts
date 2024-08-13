@@ -10,6 +10,7 @@ import { redirect } from 'next/navigation';
 import { signIn, signOut } from '@/auth';
 import { getUser } from '@/auth'
 import { DueTimeValidation } from './helpers';
+import { TodoField } from './definitions';
 
 const RegistrationFormSchema = z.object({
   name: z.string(),
@@ -26,12 +27,13 @@ const TodoFormSchema = z.object({
   }),
   title: z.string(),
   text: z.string(),
-  is_completed: z.boolean(),
+  is_active: z.boolean(),
+  finished: z.boolean(),
   created_time:z.string(),
   due_time: z.string(),
 });
 
-const createTodoForm = TodoFormSchema.omit({id: true, author_id: true, is_completed: true, created_time: true});
+const createTodoForm = TodoFormSchema.omit({id: true, author_id: true, is_active: true, finished: true, created_time: true});
 
 export async function authenticate(prevState: any, formData: FormData) {
   let errorOccured = false;
@@ -105,14 +107,13 @@ export async function createTodo(email_is_exisitng: string | null | undefined, p
   const { tag, title, text, due_time } = TodoDataFields.data;
   // validate due_time 
   if (DueTimeValidation(due_time)) {
-    const created_time = new Date().toLocaleString().replace(',', '');
+    const created_time = new Date().toISOString();
     let author = await getUser(email_is_exisitng);
     let author_id = author.id;
-    const is_complited = false;
     try {
       await sql`
-          INSERT INTO todos (author_id, is_complited, tag, title, text, created_time, due_time)
-          VALUES (${author_id}, ${is_complited}, ${tag}, ${title}, ${text}, ${created_time}, ${due_time})
+          INSERT INTO todos (author_id, tag, title, text, created_time, due_time)
+          VALUES (${author_id}, ${tag}, ${title}, ${text}, ${created_time}, ${due_time})
       `;
     } catch(error) {
         return { message: 'Database Error: Failed to Create Todo.' };
@@ -122,4 +123,26 @@ export async function createTodo(email_is_exisitng: string | null | undefined, p
   }
   revalidatePath('/todos')
   redirect('/todos');
+}
+export async function changeTodoStatus(todo: TodoField, prevState: any) {
+    // changing todo status to opposite ( active -> non active, non active -> active ) if todo isn`t finished one
+    // const new_status = !status;
+    const todo_id = todo.id
+    const new_status = !todo.is_active;
+    if (!todo.finished) {
+        try {
+          await sql`
+              UPDATE todos
+              SET is_active=${new_status}
+              WHERE id=${todo_id}
+          `;
+      } catch(error) {
+        return { message: 'Database Error: Failed to get Todo.' };
+      }
+      revalidatePath('/todos')
+      redirect('/todos');
+    } else {
+      return { message: 'this todo is finished, you can`t change its status ;>' };
+    }
+
 }
