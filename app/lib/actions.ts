@@ -146,3 +146,13 @@ export async function changeTodoStatus(todo: TodoField, prevState: any) {
     }
 
 }
+
+export async function deleteTodo(id: string) {
+  try {
+    await sql`DELETE FROM todos WHERE id=${id}`;
+  } catch(error) {
+    return { message: 'Database Error: Failed to Delete Todo.' };
+  }
+  revalidatePath('/todos')
+  redirect('/todos');
+}

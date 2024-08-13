@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Logo from "@/app/ui/logo";
-import { Button } from "./button";
+import { Button } from "./buttons";
 import { logoutAction } from "../lib/actions";
 import { Session } from "next-auth";
 import { ReactNode } from "react";

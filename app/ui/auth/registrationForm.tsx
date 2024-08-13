@@ -1,7 +1,7 @@
 "use client";
 
 import { EnvelopeIcon, UserIcon, KeyIcon, LockClosedIcon, UserPlusIcon, ExclamationCircleIcon } from "@heroicons/react/16/solid";
-import { Button } from "../button";
+import { Button } from "../buttons";
 import { useFormState } from "react-dom";
 import { createUser } from "@/app/lib/actions";
 

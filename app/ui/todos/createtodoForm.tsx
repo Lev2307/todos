@@ -2,7 +2,7 @@
 
 import { TagIcon } from "@heroicons/react/20/solid";
 import { TagField } from "../../lib/definitions";
-import { Button } from "../button";
+import { Button } from "../buttons";
 import { useFormState } from "react-dom";
 import { createTodo } from "@/app/lib/actions";
 import { ExclamationCircleIcon } from "@heroicons/react/16/solid";

@@ -3,7 +3,7 @@ import { PencilIcon, ArchiveBoxXMarkIcon, DivideIcon } from "@heroicons/react/16
 import { changeTodoStatus } from "@/app/lib/actions";
 import Link from "next/link";
 import { useFormState } from "react-dom";
-import { Button } from "../button";
+import { DeleteButton } from "../buttons";
 
 
 export default function TodoCard({todo}: {todo: TodoField}) {
@@ -26,11 +26,7 @@ export default function TodoCard({todo}: {todo: TodoField}) {
                             <PencilIcon className="w-5 h-5 text-gray-50" />
                         </li>
                     </Link>
-                    <Link href={delete_url}>
-                        <li className="w-8 h-8 bg-gray-400 border rounded-xl flex justify-center items-center cursor-pointer hover:bg-teal-500 transition ease-in-out delay-75">
-                            <ArchiveBoxXMarkIcon className="w-5 h-5 text-gray-50" />
-                        </li>
-                    </Link>
+                    <DeleteButton id={todo.id} />
                 </ul>
             </div>
             <div className="w-full h-2/3 ml-2">
