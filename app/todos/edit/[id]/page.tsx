@@ -1,6 +1,6 @@
 import { fetchTodoById, fetchTags } from "@/app/lib/data";
-import EditTodoForm from "@/app/ui/todos/forms/editTodoForm";
 
+import EditTodoForm from "@/app/ui/todos/forms/editTodoForm";
 
 export default async function Page({ params }: { params: { id: string } }) {
     const todo = await fetchTodoById(params.id);

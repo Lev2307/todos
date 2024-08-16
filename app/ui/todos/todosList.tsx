@@ -1,10 +1,13 @@
 "use client";
 
+
+import { Suspense } from "react";
+import { useSearchParams } from 'next/navigation'
+
+import { TodoField } from "@/app/lib/definitions";
+
 import TodoCard from "./todoCard";
 import LoadingTodos from "./loadingTodos";
-import { Suspense } from "react";
-import { TodoField } from "@/app/lib/definitions";
-import { useSearchParams } from 'next/navigation'
 
 
 export default function TodosList({todos}: {todos: TodoField[]}) {

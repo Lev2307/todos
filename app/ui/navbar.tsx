@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
+
+import { logoutAction } from "../lib/actions";
+
 import Logo from "@/app/ui/logo";
 import { Button } from "./buttons";
-import { logoutAction } from "../lib/actions";
-import { Session } from "next-auth";
-import { ReactNode } from "react";
 
 interface NavbarProps {
     isSignedIn: boolean;
@@ -16,7 +16,9 @@ export default function Navbar({isSignedIn, username}: NavbarProps) {
     if (isSignedIn) {
         return (
             <nav className="flex items-center justify-around mt-2">
-                <Logo />
+                <Link href="/todos">
+                    <Logo />
+                </Link>
                 <div className="flex flex-row justify-center items-center gap-10">
                     <span>{ username }</span>
                     <form action={logoutAction}>

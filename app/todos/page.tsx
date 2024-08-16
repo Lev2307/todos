@@ -1,11 +1,12 @@
 import Link from "next/link"
-import { PlusIcon } from "@heroicons/react/16/solid"
 
-import SearchBar from "../ui/todos/searchBar";
+import { PlusIcon } from "@heroicons/react/16/solid"
 
 import { auth } from "@/auth";
 import { fetchTodos } from "../lib/data";
+
 import TodosList from "../ui/todos/todosList";
+import SearchBar from "../ui/todos/searchBar";
 
 export default async function Page() {
     const session = await auth();

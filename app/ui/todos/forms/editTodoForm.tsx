@@ -2,14 +2,13 @@
 
 import { useFormState } from "react-dom";
 
-import { Session } from "next-auth";
 import { TagIcon, ExclamationCircleIcon } from "@heroicons/react/16/solid";
 
 import { TodoField, TagField } from "@/app/lib/definitions";
-import { Button } from "@/app/ui/buttons";
-import { getISOStringWithoutSecsAndMillisecs } from "@/app/lib/helpers";
 import { editTodo } from "@/app/lib/actions";
+import { getISOStringWithoutSecsAndMillisecs } from "@/app/lib/helpers";
 
+import { Button } from "@/app/ui/buttons";
 
 export default async function EditTodoForm({tags, todo}: {tags: TagField[], todo: TodoField}) {
     const editTodoAction = editTodo.bind(null, todo.id);

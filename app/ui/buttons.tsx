@@ -1,6 +1,7 @@
-import { TrashIcon } from '@heroicons/react/16/solid';
-import { deleteTodo } from '../lib/actions';
 import clsx from 'clsx';
+import { TrashIcon } from '@heroicons/react/16/solid';
+
+import { deleteTodo } from '../lib/actions';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;

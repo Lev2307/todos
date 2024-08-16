@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+
 import "@/app/ui/globals.css";
+
 import { poppins } from "@/app/ui/fonts";
-import Navbar from "./ui/navbar";
 import { auth } from "@/auth";
 
- 
+import Navbar from "./ui/navbar";
+
 export const metadata: Metadata = {
   title: "Todos App",
   description: "Just todos app =3",

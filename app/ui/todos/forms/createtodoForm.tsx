@@ -1,12 +1,14 @@
 "use client";
 
-import { TagIcon } from "@heroicons/react/20/solid";
-import { TagField } from "@/app/lib/definitions";
-import { Button } from "@/app/ui/buttons";
 import { useFormState } from "react-dom";
-import { createTodo } from "@/app/lib/actions";
-import { ExclamationCircleIcon } from "@heroicons/react/16/solid";
+
 import { Session } from "next-auth";
+import { TagIcon, ExclamationCircleIcon } from "@heroicons/react/16/solid";
+
+import { TagField } from "@/app/lib/definitions";
+import { createTodo } from "@/app/lib/actions";
+
+import { Button } from "@/app/ui/buttons";
 
 export default async function CreateTodoForm({tags, session}: {tags: TagField[], session: Session | null}) {
     const user_email = session?.user?.email;

@@ -1,7 +1,8 @@
 "use client";
 
-import { MagnifyingGlassIcon } from "@heroicons/react/16/solid"
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+
+import { MagnifyingGlassIcon } from "@heroicons/react/16/solid"
 
 export default function SearchBar() {
     const searchParams = useSearchParams(); 

@@ -1,9 +1,12 @@
 'use client';
 
-import { EnvelopeIcon, KeyIcon, ArrowRightIcon, ExclamationCircleIcon } from "@heroicons/react/16/solid";
-import { Button } from "../buttons";
-import { authenticate } from '@/app/lib/actions';
 import { useFormState } from 'react-dom';
+
+import { EnvelopeIcon, KeyIcon, ArrowRightIcon, ExclamationCircleIcon } from "@heroicons/react/16/solid";
+
+import { authenticate } from '@/app/lib/actions';
+
+import { Button } from "../buttons";
 
 export default function LoginForm() {
   const [errorMessage, formAction] = useFormState(authenticate, undefined);

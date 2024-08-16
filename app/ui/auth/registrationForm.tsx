@@ -1,9 +1,12 @@
 "use client";
 
-import { EnvelopeIcon, UserIcon, KeyIcon, LockClosedIcon, UserPlusIcon, ExclamationCircleIcon } from "@heroicons/react/16/solid";
-import { Button } from "../buttons";
 import { useFormState } from "react-dom";
+
+import { EnvelopeIcon, UserIcon, KeyIcon, LockClosedIcon, UserPlusIcon, ExclamationCircleIcon } from "@heroicons/react/16/solid";
+
 import { createUser } from "@/app/lib/actions";
+
+import { Button } from "../buttons";
 
 export default function RegistrationForm() {
     const [errorMessage, formAction] = useFormState(createUser, undefined);

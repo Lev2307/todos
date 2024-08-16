@@ -1,8 +1,11 @@
-import { TodoField } from "@/app/lib/definitions";
-import { PencilIcon, ArchiveBoxXMarkIcon, DivideIcon } from "@heroicons/react/16/solid";
-import { changeTodoStatus } from "@/app/lib/actions";
-import Link from "next/link";
 import { useFormState } from "react-dom";
+import Link from "next/link";
+
+import { PencilIcon} from "@heroicons/react/16/solid";
+
+import { TodoField } from "@/app/lib/definitions";
+import { changeTodoStatus } from "@/app/lib/actions";
+
 import { DeleteButton } from "../buttons";
 
 

@@ -1,10 +1,13 @@
 import { sql } from '@vercel/postgres';
+
 import NextAuth from "next-auth";
-import { authConfig } from './auth.config';
-// Credentials позволяет выполнять вход с использованием произвольных учетных данных, таких как имя пользователя и пароль
-import Credentials from 'next-auth/providers/credentials';
 import bcrypt from 'bcrypt';
 import { z } from 'zod';
+
+// Credentials позволяет выполнять вход с использованием произвольных учетных данных, таких как имя пользователя и пароль
+import Credentials from 'next-auth/providers/credentials';
+
+import { authConfig } from './auth.config';
 
 type User = {
     id: string;

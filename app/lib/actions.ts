@@ -1,11 +1,12 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
+
 import { AuthError } from 'next-auth';
 import { sql } from '@vercel/postgres';
 import bcrypt from 'bcrypt';
 import { z } from 'zod';
-import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 
 import { signIn, signOut } from '@/auth';
 import { getUser } from '@/auth'
