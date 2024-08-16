@@ -10,7 +10,7 @@ import { createTodo } from "@/app/lib/actions";
 
 import { Button } from "@/app/ui/buttons";
 
-export default async function CreateTodoForm({tags, session}: {tags: TagField[], session: Session | null}) {
+export default function CreateTodoForm({tags, session}: {tags: TagField[], session: Session | null}) {
     const user_email = session?.user?.email;
     const createTodoAction = createTodo.bind(null, user_email);
     const [errorMessage, formAction] = useFormState(createTodoAction, undefined)

@@ -10,7 +10,7 @@ import { getISOStringWithoutSecsAndMillisecs } from "@/app/lib/helpers";
 
 import { Button } from "@/app/ui/buttons";
 
-export default async function EditTodoForm({tags, todo}: {tags: TagField[], todo: TodoField}) {
+export default function EditTodoForm({tags, todo}: {tags: TagField[], todo: TodoField}) {
     const editTodoAction = editTodo.bind(null, todo.id);
     const [errorMessage, formAction] = useFormState(editTodoAction, undefined)
 
