@@ -11,7 +11,6 @@ export default function TodoCard({todo}: {todo: TodoField}) {
     const [msg, formAction] = useFormState(changeTodoStatusAction, undefined)
     const due_time = new Date(todo.due_time.toString()).toLocaleString("en-US", {year: 'numeric', month: 'numeric', day: 'numeric', hour12: false, hour: '2-digit', minute:'2-digit'});
     const edit_url = `/todos/edit/${todo.id}`;
-    const delete_url = `/todos/delete/${todo.id}`;
 
     return (
         <div className="w-1/3 flex flex-col border border-teal-500 h-44 mt-4 border-2">
@@ -35,11 +34,17 @@ export default function TodoCard({todo}: {todo: TodoField}) {
             {!todo.finished && 
             <div className="w-full h-1/3 mb-1 flex justify-between items-center">
                 <form action={formAction} className="ml-2 flex justify-center items-center gap-1">
-                    {todo.is_active === true && <button className="h-10 items-center bg-teal-500 rounded-lg px-4 text-sm font-medium text-white">Make Inactive</button>}
-                    {todo.is_active === false && <button className="h-10 items-center bg-red-500 rounded-lg px-4 text-sm font-medium text-white">Make Active</button>}
+                    {todo.is_active ? (
+                        <button className="h-10 items-center bg-teal-500 rounded-lg px-4 text-sm font-medium text-white">Make Inactive</button>
+                    ) : (
+                        <button className="h-10 items-center bg-red-500 rounded-lg px-4 text-sm font-medium text-white">Make Active</button>
+                    )}
                 </form>
-                {todo.is_active === true && <h5 className="text-base mr-2">Could be active till: <span className="text-teal-500 underline">{due_time}</span></h5>}
-                {todo.is_active === false && <h5 className="text-base mr-2">This todo is inactive =3</h5>}
+                    {todo.is_active ? (
+                        <h5 className="text-base mr-2">Could be active till: <span className="text-teal-500 underline">{due_time}</span></h5>
+                    ) : (
+                        <h5 className="text-base mr-2">This todo is inactive =3</h5>
+                    )}
             </div>}
             {todo.finished && 
             <div className="w-full h-1/3 mb-1 flex justify-center items-center">

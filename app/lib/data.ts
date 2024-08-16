@@ -25,12 +25,22 @@ export async function fetchTodos(user_email: string | null | undefined) {
     let user = await getUser(user_email);
     let userID = user.id;
     try {
-        // get Todos, filtered by session user and todo completion
+        // get Todos, filtered by session user
         const db_call = await client.sql<TodoField>`
         SELECT * FROM todos WHERE author_id=${userID}
         `
         const todos = db_call.rows;
         return todos;
+    } catch(error) {
+        throw error;
+    }
+}
+
+export async function fetchTodoById(todo_id: string) {
+    noStore();
+    try {
+        const get_todo = await client.sql<TodoField>`SELECT * FROM todos WHERE id=${todo_id}`;
+        return get_todo.rows[0];
     } catch(error) {
         throw error;
     }

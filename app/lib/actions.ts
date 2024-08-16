@@ -34,6 +34,7 @@ const TodoFormSchema = z.object({
 });
 
 const createTodoForm = TodoFormSchema.omit({id: true, author_id: true, is_active: true, finished: true, created_time: true});
+const editTodoForm = TodoFormSchema.omit({id: true, author_id: true, is_active: true, finished: true, created_time: true});
 
 export async function authenticate(prevState: any, formData: FormData) {
   let errorOccured = false;
@@ -91,7 +92,7 @@ export async function logoutAction() {
   await signOut({redirectTo: '/'});
 }
 
-export async function createTodo(email_is_exisitng: string | null | undefined, prevState: any, formData: FormData) {
+export async function createTodo(user_email: string | null | undefined, prevState: any, formData: FormData) {
   const TodoDataFields = createTodoForm.safeParse({
     tag: formData.get('tag'),
     title: formData.get('title'),
@@ -107,23 +108,61 @@ export async function createTodo(email_is_exisitng: string | null | undefined, p
   const { tag, title, text, due_time } = TodoDataFields.data;
   // validate due_time 
   if (DueTimeValidation(due_time)) {
-    const created_time = new Date().toISOString();
-    let author = await getUser(email_is_exisitng);
-    let author_id = author.id;
-    try {
-      await sql`
-          INSERT INTO todos (author_id, tag, title, text, created_time, due_time)
-          VALUES (${author_id}, ${tag}, ${title}, ${text}, ${created_time}, ${due_time})
-      `;
-    } catch(error) {
-        return { message: 'Database Error: Failed to Create Todo.' };
-    }
-  } else {
-    return { message: 'Choose an appropriate date!' }
+      const created_time = new Date().toISOString();
+      let author = await getUser(user_email);
+      let author_id = author.id;
+      try {
+        await sql`
+            INSERT INTO todos (author_id, tag, title, text, created_time, due_time)
+            VALUES (${author_id}, ${tag}, ${title}, ${text}, ${created_time}, ${due_time})
+        `;
+      } catch(error) {
+          return { message: 'Database Error: Failed to Create Todo.' };
+      }
+    } else {
+      return { message: 'Choose an appropriate date!' }
   }
   revalidatePath('/todos')
   redirect('/todos');
 }
+
+export async function editTodo(todo_id: string, prevState: any, formData: FormData) {
+  const NewTodoDataFields = editTodoForm.safeParse({
+      tag: formData.get('tag'),
+      title: formData.get('title'),
+      text: formData.get('text'),
+      due_time: formData.get('due_time'),
+  })
+  if(!NewTodoDataFields.success) {
+    return {
+      errors: NewTodoDataFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Edit Todo.',
+    };
+  }
+  const {tag, title, text, due_time} = NewTodoDataFields.data;
+  // validate due_time 
+  if (DueTimeValidation(due_time)) {
+    const edited_time = new Date().toISOString();
+    try {
+      await sql`
+          UPDATE todos
+          SET tag=${tag},
+              title=${title},
+              text=${text},
+              created_time=${edited_time},
+              due_time=${due_time}
+          WHERE id=${todo_id}
+      `;
+    } catch(error) {
+        return { message: 'Database Error: Failed to Edit Todo.' };
+    }
+  } else {
+    return { message: 'Choose an appropriate date!' }
+}
+revalidatePath('/todos')
+redirect('/todos');
+}
+
 export async function changeTodoStatus(todo: TodoField, prevState: any) {
     // changing todo status to opposite ( active -> non active, non active -> active ) if todo isn`t finished one
     // const new_status = !status;

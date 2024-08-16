@@ -1,18 +1,21 @@
 "use client";
 
-import { TagIcon } from "@heroicons/react/20/solid";
-import { TagField } from "../../lib/definitions";
-import { Button } from "../buttons";
 import { useFormState } from "react-dom";
-import { createTodo } from "@/app/lib/actions";
-import { ExclamationCircleIcon } from "@heroicons/react/16/solid";
+
 import { Session } from "next-auth";
+import { TagIcon, ExclamationCircleIcon } from "@heroicons/react/16/solid";
+
+import { TodoField, TagField } from "@/app/lib/definitions";
+import { Button } from "@/app/ui/buttons";
+import { getISOStringWithoutSecsAndMillisecs } from "@/app/lib/helpers";
+import { editTodo } from "@/app/lib/actions";
 
 
-export default async function CreateTodoForm({tags, session}: {tags: TagField[], session: Session | null}) {
-    const user_email = session?.user?.email
-    const createTodoAction = createTodo.bind(null, user_email);
-    const [errorMessage, formAction] = useFormState(createTodoAction, undefined)
+export default async function EditTodoForm({tags, todo}: {tags: TagField[], todo: TodoField}) {
+    const editTodoAction = editTodo.bind(null, todo.id);
+    const [errorMessage, formAction] = useFormState(editTodoAction, undefined)
+
+    const formated_due_time = getISOStringWithoutSecsAndMillisecs(new Date(todo.due_time));
     return (
         <form action={formAction} className="w-1/2">
             <div className="mt-4">
@@ -28,11 +31,12 @@ export default async function CreateTodoForm({tags, session}: {tags: TagField[],
                         required
                         aria-describedby="tag-error"
                         >
-                        <option value="" disabled>
-                            Select a tag
-                        </option>
                         {tags.map((tag) => (
-                            <option key={tag.id} value={tag.title}>{tag.title}</option>
+                            (tag.title === todo.title ? (
+                                <option key={tag.id} value={tag.title} selected>{tag.title}</option>
+                            ) : (
+                                <option key={tag.id} value={tag.title}>{tag.title}</option>
+                            ))
                         ))}
                     </select>
                     <TagIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
@@ -45,7 +49,8 @@ export default async function CreateTodoForm({tags, session}: {tags: TagField[],
                 <input type="text" 
                     name="title" 
                     id="title"
-                    placeholder="Todo title"
+                    defaultValue={todo.title}
+                    placeholder="New todo title"
                     className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-2 text-sm placeholder:text-gray-500 outline-teal-500"
                     required
                     maxLength={50}
@@ -59,8 +64,9 @@ export default async function CreateTodoForm({tags, session}: {tags: TagField[],
                 <textarea 
                 name="text" 
                 id="text"
+                defaultValue={todo.text}
                 className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-2 text-sm placeholder:text-gray-500 outline-teal-500 resize-none"
-                placeholder="Description"
+                placeholder="New description"
                 maxLength={250}
                 >
                 </textarea>
@@ -72,10 +78,11 @@ export default async function CreateTodoForm({tags, session}: {tags: TagField[],
                 <input type="datetime-local"
                 name="due_time" 
                 id="due_time"
+                defaultValue={formated_due_time}
                 className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-2 text-sm placeholder:text-gray-500 outline-teal-500 resize-none"
                 />
             </div>
-            <CreateTodoButton />
+            <EditTodoButton />
             <div
               className="flex h-8 items-end space-x-1 mt-2"
               aria-live="polite"
@@ -89,11 +96,11 @@ export default async function CreateTodoForm({tags, session}: {tags: TagField[],
               )}
             </div>
         </form>
-    );
+    )
 }
 
-function CreateTodoButton() {
+function EditTodoButton() {
     return (
-        <Button className="mt-4">Create Todo</Button>
+        <Button className="mt-4">Edit Todo</Button>
     )
 }
