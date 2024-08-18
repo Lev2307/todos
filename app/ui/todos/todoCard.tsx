@@ -1,6 +1,7 @@
 import { useFormState } from "react-dom";
 import Link from "next/link";
 
+import clsx from "clsx";
 import { PencilIcon} from "@heroicons/react/16/solid";
 
 import { TodoField } from "@/app/lib/definitions";
@@ -16,20 +17,26 @@ export default function TodoCard({todo}: {todo: TodoField}) {
     const edit_url = `/todos/edit/${todo.id}`;
 
     return (
-        <div className="w-1/3 flex flex-col border border-teal-500 h-44 mt-4 border-2">
+        <div className={clsx("w-1/3 flex flex-col border h-44 mt-4 border-2", todo.finished ? "border-red-500": "border-teal-500" )}>
             <div className="flex justify-between items-center w-full p-2 h-1/3">
                 <div className="flex justify-center items-center gap-3">
                     <h3 className="text-lg underline">{todo.title}</h3>
                     <h3 className="text-base mb-2">#{todo.tag}</h3>
                 </div>
-                <ul className="flex justify-center items-center gap-3">
-                    <Link href={edit_url}>
-                        <li className="w-8 h-8 bg-gray-400 border rounded-xl flex justify-center items-center cursor-pointer hover:bg-teal-500 transition ease-in-out delay-75">
-                            <PencilIcon className="w-5 h-5 text-gray-50" />
-                        </li>
-                    </Link>
-                    <DeleteButton id={todo.id} />
-                </ul>
+                {todo.finished ? (
+                    <h5>Is finished since: <span className="text-red-500">{due_time}</span></h5>
+                ) : (
+                    <ul className="flex justify-center items-center gap-3">
+                        <Link href={edit_url}>
+                            <li className="w-8 h-8 bg-gray-400 border rounded-xl flex justify-center items-center cursor-pointer hover:bg-teal-500 transition ease-in-out delay-75">
+                                <PencilIcon className="w-5 h-5 text-gray-50" />
+                            </li>
+                        </Link>
+                        <DeleteButton id={todo.id} />
+                    </ul>
+                )
+
+                } 
             </div>
             <div className="w-full h-2/3 ml-2">
                 <p className="text-sm">{todo.text}</p>

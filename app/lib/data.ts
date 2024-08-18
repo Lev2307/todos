@@ -3,11 +3,13 @@ import { unstable_noStore as noStore } from "next/cache";
 import { db } from "@vercel/postgres";
 
 import { TagField, TodoField } from "./definitions";
+import { checkTodoIsFinished } from "./helpers";
 import { getUser } from "@/auth";
 
 const client = await db.connect();
 
 export async function fetchTags() {
+    // noStore нужен, чтобы не кэшировать запрос
     noStore();
     try {
         const db_call = await client.sql<TagField>`
@@ -30,8 +32,11 @@ export async function fetchTodos(user_email: string | null | undefined) {
         // get Todos, filtered by session user
         const db_call = await client.sql<TodoField>`
         SELECT * FROM todos WHERE author_id=${userID}
-        `
+        `;
         const todos = db_call.rows;
+        for (let todo in todos) {
+            checkTodoIsFinished(todos[todo]);
+        }
         return todos;
     } catch(error) {
         throw error;
@@ -39,7 +44,6 @@ export async function fetchTodos(user_email: string | null | undefined) {
 }
 
 export async function fetchTodoById(todo_id: string) {
-    noStore();
     try {
         const get_todo = await client.sql<TodoField>`SELECT * FROM todos WHERE id=${todo_id}`;
         return get_todo.rows[0];

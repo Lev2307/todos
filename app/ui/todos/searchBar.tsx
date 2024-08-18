@@ -19,7 +19,7 @@ export default function SearchBar() {
         router.push(`${pathname}?${params}`);
     }
     return (
-        <form action="" className="relative w-1/2 mt-4">
+        <form action="" className="relative w-1/2">
             <input type="text"
             name="searchInput" 
             id="searchInput"

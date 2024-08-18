@@ -1,19 +1,25 @@
 import Link from "next/link"
 
-import { PlusIcon } from "@heroicons/react/16/solid"
+import { PlusIcon, ArrowRightIcon } from "@heroicons/react/16/solid"
 
 import { auth } from "@/auth";
 import { fetchTodos } from "../lib/data";
 
 import TodosList from "../ui/todos/todosList";
 import SearchBar from "../ui/todos/searchBar";
+import { Button } from "../ui/buttons";
 
 export default async function Page() {
     const session = await auth();
-    const todos = await fetchTodos(session?.user?.email);
+    const get_todos = await fetchTodos(session?.user?.email);
+    const todos = get_todos.filter((todo) => todo.finished === false);
+    const finished_todos = get_todos.filter((todo) => todo.finished === true);
     return (
         <section className="h-screen flex flex-col justify-start items-center">
-            <SearchBar />
+            <div className="flex justify-center items-center mt-4 w-full gap-10">
+                <SearchBar />
+                {finished_todos.length >= 1 && <FinishedTodosButton />}
+            </div>
             {todos.length > 0 ? (
                 <TodosList todos={todos} />
             ) : (
@@ -23,5 +29,13 @@ export default async function Page() {
                 <PlusIcon className="w-8 h-8 text-slate-200" />
             </Link>
         </section>
+    )
+}
+
+function FinishedTodosButton() {
+    return (
+        <Link href="/todos/finished">
+            <Button className="">Finished todos <ArrowRightIcon className="ml-3 h-5 w-5 text-gray-50" /></Button>
+        </Link>
     )
 }

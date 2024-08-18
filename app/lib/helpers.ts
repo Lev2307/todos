@@ -1,3 +1,6 @@
+import { TodoField } from "./definitions";
+import { sql } from '@vercel/postgres';
+
 export function DueTimeValidation(due_time: string) {
     // check if due_time is not in the past
     const due_time_validation = new Date(due_time);
@@ -18,3 +21,17 @@ export function getISOStringWithoutSecsAndMillisecs(date: Date) {
     
     return dateAndTime[0]+'T'+time[0]+':'+time[1]
   }
+
+export async function checkTodoIsFinished(todo: TodoField) {
+    const now = new Date();
+    const todo_due_time = new Date(todo.due_time);
+    if (todo_due_time < now) {
+        try {
+            await sql`UPDATE todos 
+                    SET finished=${true}
+                    WHERE id=${todo.id}`;
+        } catch (error) {
+            throw error;
+        }
+    }
+}

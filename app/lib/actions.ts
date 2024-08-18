@@ -85,6 +85,7 @@ export async function createUser(prevState: any, formData: FormData) {
       return { message: 'Two passwords didn`t match.' };
     }
   }
+  // revaildatePath - очистка кэша на опред. url
   revalidatePath('/auth/login')
   redirect('/auth/login');
 }
@@ -166,7 +167,6 @@ redirect('/todos');
 
 export async function changeTodoStatus(todo: TodoField, prevState: any) {
     // changing todo status to opposite ( active -> non active, non active -> active ) if todo isn`t finished one
-    // const new_status = !status;
     const todo_id = todo.id
     const new_status = !todo.is_active;
     if (!todo.finished) {
