@@ -40,3 +40,4 @@ next-env.d.ts
 
 # scripts
 /scripts
+.vercel
