@@ -6,6 +6,7 @@ import { logoutAction } from "../lib/actions";
 
 import Logo from "@/app/ui/logo";
 import { Button } from "./buttons";
+import { usePathname } from "next/navigation";
 
 interface NavbarProps {
     isSignedIn: boolean;
@@ -13,6 +14,7 @@ interface NavbarProps {
   }
 
 export default function Navbar({isSignedIn, username}: NavbarProps) {
+    const path = usePathname();
     if (isSignedIn) {
         return (
             <nav className="flex items-center justify-around mt-2">
@@ -20,7 +22,7 @@ export default function Navbar({isSignedIn, username}: NavbarProps) {
                     <Logo />
                 </Link>
                 <div className="flex flex-row justify-center items-center gap-10">
-                    <span>{ username }</span>
+                    {path !== '/todos/profile' && <Link href="/todos/profile">{ username }</Link>}
                     <form action={logoutAction}>
                         <Button>Sign Out</Button>
                     </form>

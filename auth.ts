@@ -9,13 +9,6 @@ import Credentials from 'next-auth/providers/credentials';
 
 import { authConfig } from './auth.config';
 
-type User = {
-    id: string;
-    name: string;
-    email: string;
-    password: string;
-}
-
 export async function getUser(email: string | null | undefined) {
     // получение пользователя из бд по почте
     try {
@@ -34,6 +27,7 @@ export async function getUser(email: string | null | undefined) {
         async authorize(credentials) {
           // создаю объект с полями: почта, пароль на основе полученных данных из формы
           const parsedCredentials = z.object({ email: z.string().email(), password: z.string().min(6) }).safeParse(credentials);
+
           // проверка на валидность данных
           if (parsedCredentials.success) {
             const { email, password } = parsedCredentials.data;

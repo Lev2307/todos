@@ -1,5 +1,3 @@
-import { redirect } from 'next/navigation';
-
 // Здеся находится конфиг авторизации
 
 import type { NextAuthConfig } from "next-auth";

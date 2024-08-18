@@ -73,11 +73,12 @@ export async function createUser(prevState: any, formData: FormData) {
 
     // check two entered passwords are the same
     if (password === password_confirmation) {
-      const uuid = crypto.randomUUID();
+      const user_id = crypto.randomUUID();
+      const created_time = new Date().toISOString();
       const hashedPassword = await bcrypt.hash(password, 10);
       try {
-        await sql`INSERT INTO users (id, name, email, password)
-            VALUES (${uuid}, ${name}, ${email}, ${hashedPassword})`;
+        await sql`INSERT INTO users (id, name, email, created_time, password)
+            VALUES (${user_id}, ${name}, ${email}, ${created_time}, ${hashedPassword})`;
       } catch(error) {
         return { message: 'Database Error: Failed to Create user.' };
       }

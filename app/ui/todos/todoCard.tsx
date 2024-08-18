@@ -13,7 +13,7 @@ import { DeleteButton } from "../buttons";
 export default function TodoCard({todo}: {todo: TodoField}) {
     const changeTodoStatusAction = changeTodoStatus.bind(null, todo);
     const [msg, formAction] = useFormState(changeTodoStatusAction, undefined)
-    const due_time = new Date(todo.due_time.toString()).toLocaleString("en-US", {year: 'numeric', month: 'numeric', day: 'numeric', hour12: false, hour: '2-digit', minute:'2-digit'});
+    const due_time = new Date(todo.due_time.toString()).toLocaleString("ru", {year: 'numeric', month: 'numeric', day: 'numeric', hour12: false, hour: '2-digit', minute:'2-digit'});
     const edit_url = `/todos/edit/${todo.id}`;
 
     return (
