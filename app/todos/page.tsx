@@ -12,8 +12,8 @@ import { Button } from "../ui/buttons";
 export default async function Page() {
     const session = await auth();
     const get_todos = await fetchTodos(session?.user?.email);
-    const todos = get_todos.filter((todo) => todo.finished === false);
-    const finished_todos = get_todos.filter((todo) => todo.finished === true);
+    const todos = get_todos.filter((todo) => todo.is_active === true);
+    const finished_todos = get_todos.filter((todo) => todo.is_active === false);
     return (
         <section className="h-screen flex flex-col justify-start items-center">
             <div className="flex justify-center items-center mt-4 w-full gap-10">
@@ -23,7 +23,7 @@ export default async function Page() {
             {todos.length > 0 ? (
                 <TodosList todos={todos} />
             ) : (
-                <h1 className="text-lg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">No todos have been created on this acc =3</h1>
+                <h1 className="text-lg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">You don`t have any active todos =3</h1>
             )}
             <Link className="flex justify-center items-center w-12 h-12 rounded-full hover:underline bg-teal-600 fixed bottom-5 right-5 hover:scale-125 transition-transform" href="/todos/create">
                 <PlusIcon className="w-8 h-8 text-slate-200" />

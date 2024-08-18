@@ -30,7 +30,8 @@ export async function checkTodoIsFinished(todo: TodoField) {
     if (todo_due_time < now) {
         try {
             await sql`UPDATE todos 
-                    SET finished=${true}
+                    SET is_active=${false},
+                        due_time=${now.toISOString()}
                     WHERE id=${todo.id}`;
         } catch (error) {
             throw error;

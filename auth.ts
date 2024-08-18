@@ -8,6 +8,7 @@ import { z } from 'zod';
 import Credentials from 'next-auth/providers/credentials';
 
 import { authConfig } from './auth.config';
+import { User } from './app/lib/definitions';
 
 export async function getUser(email: string | null | undefined) {
     // получение пользователя из бд по почте

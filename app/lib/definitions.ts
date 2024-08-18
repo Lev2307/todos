@@ -16,7 +16,6 @@ export type TodoField = {
     author_id: string,
     tag: string, 
     is_active: boolean,
-    finished: boolean,
     title: string,
     text: string,
     due_time: string,

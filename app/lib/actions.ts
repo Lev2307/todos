@@ -29,13 +29,12 @@ const TodoFormSchema = z.object({
   title: z.string(),
   text: z.string(),
   is_active: z.boolean(),
-  finished: z.boolean(),
   created_time:z.string(),
   due_time: z.string(),
 });
 
-const createTodoForm = TodoFormSchema.omit({id: true, author_id: true, is_active: true, finished: true, created_time: true});
-const editTodoForm = TodoFormSchema.omit({id: true, author_id: true, is_active: true, finished: true, created_time: true});
+const createTodoForm = TodoFormSchema.omit({id: true, author_id: true, is_active: true, created_time: true});
+const editTodoForm = TodoFormSchema.omit({id: true, author_id: true, is_active: true, created_time: true});
 
 export async function authenticate(prevState: any, formData: FormData) {
   let errorOccured = false;
@@ -166,26 +165,22 @@ revalidatePath('/todos')
 redirect('/todos');
 }
 
-export async function changeTodoStatus(todo: TodoField, prevState: any) {
-    // changing todo status to opposite ( active -> non active, non active -> active ) if todo isn`t finished one
+export async function changeTodoStatusToInactive(todo: TodoField, prevState: any) {
+    // changing todo status to inactive ( active -> inactive )
     const todo_id = todo.id
-    const new_status = !todo.is_active;
-    if (!todo.finished) {
-        try {
-          await sql`
-              UPDATE todos
-              SET is_active=${new_status}
-              WHERE id=${todo_id}
-          `;
-      } catch(error) {
-        return { message: 'Database Error: Failed to get Todo.' };
-      }
-      revalidatePath('/todos')
-      redirect('/todos');
-    } else {
-      return { message: 'this todo is finished, you can`t change its status ;>' };
+    const now = new Date();
+    try {
+        await sql`
+            UPDATE todos
+            SET is_active=${false},
+                due_time=${now.toISOString()}
+            WHERE id=${todo_id}
+        `;
+    } catch(error) {
+      return { message: 'Database Error: Failed to get Todo.' };
     }
-
+    revalidatePath('/todos')
+    redirect('/todos');
 }
 
 export async function deleteTodo(id: string) {
