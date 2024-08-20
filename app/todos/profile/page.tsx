@@ -1,4 +1,5 @@
 import { auth, getUser } from "@/auth";
+import AuthorizeViaTelegramButton from "@/app/ui/auth/authorizeViaTelegramButton";
 
 export default async function Page() {
     const session = await auth();
@@ -12,6 +13,7 @@ export default async function Page() {
                     <li className="text-lg">Email: <span className="text-base text-teal-500">{user.email}</span></li>
                     <li className="text-lg">Joined since: <span className="text-base text-teal-500">{created_time}</span></li>
                 </ul>
+                <AuthorizeViaTelegramButton />
             </div>
         </section>
     )

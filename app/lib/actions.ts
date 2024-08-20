@@ -12,6 +12,7 @@ import { signIn, signOut } from '@/auth';
 import { getUser } from '@/auth'
 import { DueTimeValidation } from './helpers';
 import { TodoField } from './definitions';
+import { TelegramAuthData } from '@telegram-auth/react';
 
 const RegistrationFormSchema = z.object({
   name: z.string(),
@@ -61,7 +62,7 @@ export async function createUser(prevState: any, formData: FormData) {
     email: formData.get('email'),
     password: formData.get('password'),
     password_confirmation: formData.get('password_confirmation')
-  })
+  });
   if (userData.success) {
     const {name, email, password, password_confirmation} = userData.data;
     // check that user with entered email doesn`t exist

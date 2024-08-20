@@ -3,6 +3,9 @@
 import { TodoField } from "./definitions";
 import { sql } from '@vercel/postgres';
 
+import { TelegramAuthData } from '@telegram-auth/react';
+
+
 export function DueTimeValidation(due_time: string) {
     // check if due_time is not in the past
     const due_time_validation = new Date(due_time);
@@ -37,4 +40,8 @@ export async function checkTodoIsFinished(todo: TodoField) {
             throw error;
         }
     }
+}
+
+export function validation(data: TelegramAuthData) {
+    console.log(data);
 }
