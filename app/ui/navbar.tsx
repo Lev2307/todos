@@ -32,7 +32,9 @@ export default function Navbar({isSignedIn, username}: NavbarProps) {
     } else {
         return (
             <nav className="flex items-center justify-around mt-2">
-                <Logo />
+                <Link href="/">
+                    <Logo />
+                </Link>
                 <ul className="flex items-center gap-10">
                     <li className="hover:underline hover:text-teal-600">
                         <Link href="/auth/registration">Registration</Link>
