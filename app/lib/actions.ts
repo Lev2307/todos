@@ -92,7 +92,7 @@ export async function createUser(prevState: any, formData: FormData) {
 }
 
 export async function logoutAction() {
-  await signOut({redirectTo: '/'});
+  await signOut({redirectTo: "/auth/login"});
 }
 
 export async function createTodo(user_email: string | null | undefined, prevState: any, formData: FormData) {
