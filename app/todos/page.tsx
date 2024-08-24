@@ -2,7 +2,7 @@ import Link from "next/link"
 
 import { PlusIcon, ArrowRightIcon } from "@heroicons/react/16/solid"
 
-import { auth } from "@/auth";
+import { auth, getUser } from "@/auth";
 import { fetchTodos } from "../lib/data";
 
 import TodosList from "../ui/todos/todosList";
@@ -11,7 +11,8 @@ import { Button } from "../ui/buttons";
 
 export default async function Page() {
     const session = await auth();
-    const get_todos = await fetchTodos(session?.user?.email);
+    const user = await getUser(session?.user?.email);
+    const get_todos = await fetchTodos(user.email);
     const todos = get_todos.filter((todo) => todo.is_active === true);
     const finished_todos = get_todos.filter((todo) => todo.is_active === false);
     return (
@@ -21,7 +22,7 @@ export default async function Page() {
                 {finished_todos.length >= 1 && <FinishedTodosButton />}
             </div>
             {todos.length > 0 ? (
-                <TodosList todos={todos} />
+                <TodosList todos={todos} user={user} />
             ) : (
                 <h1 className="text-lg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">You don`t have any active todos =3</h1>
             )}

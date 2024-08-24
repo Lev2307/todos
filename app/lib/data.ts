@@ -24,9 +24,10 @@ export async function fetchTags() {
     }
 }
 
-export async function fetchTodos(user_email: string | null | undefined) {
+export async function fetchTodos(user_email: string) {
     noStore();
     let user = await getUser(user_email);
+    let telegram_chat_id = user.telegram_chat_id;
     let userID = user.id;
     try {
         // get Todos, filtered by session user
@@ -34,8 +35,9 @@ export async function fetchTodos(user_email: string | null | undefined) {
         SELECT * FROM todos WHERE author_id=${userID}
         `;
         const todos = db_call.rows;
-        for (let todo in todos) {
-            checkTodoIsFinished(todos[todo]);
+        const active_todos = todos.filter((todo) => todo.is_active === true);
+        for (let todo in active_todos) {
+            checkTodoIsFinished(active_todos[todo], telegram_chat_id);
         }
         return todos;
     } catch(error) {

@@ -4,14 +4,16 @@ import Link from "next/link";
 import clsx from "clsx";
 import { PencilIcon} from "@heroicons/react/16/solid";
 
-import { TodoField } from "@/app/lib/definitions";
+import { TodoField, User } from "@/app/lib/definitions";
 import { changeTodoStatusToInactive } from "@/app/lib/actions";
 
 import { DeleteButton } from "../buttons";
 
 
-export default function TodoCard({todo}: {todo: TodoField}) {
-    const changeTodoStatusAction = changeTodoStatusToInactive.bind(null, todo);
+export default function TodoCard({todo, user}: {todo: TodoField, user: User}) {
+    let params: [TodoField, User];
+    params = [todo, user];
+    const changeTodoStatusAction = changeTodoStatusToInactive.bind(null, params);
     const [msg, formAction] = useFormState(changeTodoStatusAction, undefined)
     const due_time = new Date(todo.due_time.toString()).toLocaleString("ru", {year: 'numeric', month: 'numeric', day: 'numeric', hour12: false, hour: '2-digit', minute:'2-digit'});
     const edit_url = `/todos/edit/${todo.id}`;
@@ -35,7 +37,6 @@ export default function TodoCard({todo}: {todo: TodoField}) {
                         <DeleteButton id={todo.id} />
                     </ul>
                 )
-
                 } 
             </div>
             <div className="w-full h-2/3 ml-2">

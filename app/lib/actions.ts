@@ -7,12 +7,14 @@ import { AuthError } from 'next-auth';
 import { sql } from '@vercel/postgres';
 import bcrypt from 'bcrypt';
 import { z } from 'zod';
+import { TelegramAuthData } from '@telegram-auth/react';
 
 import { signIn, signOut } from '@/auth';
 import { getUser } from '@/auth'
 import { DueTimeValidation } from './helpers';
-import { TodoField } from './definitions';
-import { TelegramAuthData } from '@telegram-auth/react';
+import { TodoField, User} from './definitions';
+import { bot } from './helpers';
+
 
 const RegistrationFormSchema = z.object({
   name: z.string(),
@@ -166,9 +168,11 @@ revalidatePath('/todos')
 redirect('/todos');
 }
 
-export async function changeTodoStatusToInactive(todo: TodoField, prevState: any) {
+export async function changeTodoStatusToInactive(params: [TodoField, User], prevState: any) {
     // changing todo status to inactive ( active -> inactive )
-    const todo_id = todo.id
+    const todo = params[0];
+    const user = params[1];
+    const todo_id = todo.id;
     const now = new Date();
     try {
         await sql`
@@ -177,19 +181,36 @@ export async function changeTodoStatusToInactive(todo: TodoField, prevState: any
                 due_time=${now.toISOString()}
             WHERE id=${todo_id}
         `;
+        const user_telegram_id = user.telegram_chat_id;
+        bot.sendMessage(user_telegram_id, `You have just complited a new todo 📝\n Tag ${todo.tag}\n Title ${todo.title}\n Desc ${todo.text}\n Was finished on ${now.toLocaleString()}\nCongrats 🔥`)
     } catch(error) {
       return { message: 'Database Error: Failed to get Todo.' };
     }
     revalidatePath('/todos')
     redirect('/todos');
 }
-
 export async function deleteTodo(id: string) {
   try {
     await sql`DELETE FROM todos WHERE id=${id}`;
   } catch(error) {
     return { message: 'Database Error: Failed to Delete Todo.' };
   }
-  revalidatePath('/todos')
+  revalidatePath('/todos');
   redirect('/todos');
+}
+
+export async function add_telegram_to_user(data: TelegramAuthData, authorized_user: User) {
+  console.log(data);
+    const telegram_username = data.username;
+    const telegram_chat_id = data.id;
+    try {
+      await sql`UPDATE users
+                SET telegram_chat_id=${telegram_chat_id},
+                    telegram_username=${telegram_username}
+                WHERE id=${authorized_user.id}`
+    } catch(error) {
+      throw new Error('Failed to connect telegram to user account');
+    }
+    revalidatePath('/todos/profile');
+    redirect('/todos/profile');
 }

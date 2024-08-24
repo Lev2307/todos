@@ -1,18 +1,24 @@
 "use client";
 
-import { LoginButton } from "@telegram-auth/react";
-import { validation } from "@/app/lib/helpers";
+import { Suspense } from "react";
 
-export default function AuthorizeViaTelegramButton() {
+import { LoginButton } from "@telegram-auth/react";
+
+import { add_telegram_to_user } from "@/app/lib/actions";
+import { User } from "@/app/lib/definitions";
+
+export default async function AuthorizeViaTelegramButton({user}: {user: User}) {
     return (
-        <div className="mt-4">
-            <LoginButton
-                botUsername={process.env.NEXT_PUBLIC_BOT_USERNAME!}
-                showAvatar={false}
-                onAuthCallback={(data) => {
-                    validation(data);
-                }}
-            />
-        </div>
+        <Suspense fallback={<h1>Loading...</h1>}>
+            <div className="mt-2 flex justify-center items-center">
+                <LoginButton
+                    botUsername={process.env.NEXT_PUBLIC_BOT_USERNAME!}
+                    showAvatar={false}
+                    onAuthCallback={(data) => {
+                        add_telegram_to_user(data, user);
+                    }}
+                />
+            </div>
+        </Suspense>
     )
 }
