@@ -22,7 +22,7 @@ export default async function RootLayout({children}: Readonly<{children: React.R
   }
   return (
       <html lang="en">
-        <body className={`${poppins.className} overflow-hidden`}>
+        <body className={`${poppins.className}`}>
           <Navbar isSignedIn={isSignedIn} username={username} />
           {children}
         </body>

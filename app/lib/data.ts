@@ -3,7 +3,7 @@ import { unstable_noStore as noStore } from "next/cache";
 import { db } from "@vercel/postgres";
 
 import { TagField, TodoField } from "./definitions";
-import { checkTodoIsFinished } from "./helpers";
+import { checkTodoIsFinished } from "./actions";
 import { getUser } from "@/auth";
 
 const client = await db.connect();

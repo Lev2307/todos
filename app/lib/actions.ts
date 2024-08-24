@@ -7,14 +7,13 @@ import { AuthError } from 'next-auth';
 import { sql } from '@vercel/postgres';
 import bcrypt from 'bcrypt';
 import { z } from 'zod';
+import got from 'got';
 import { TelegramAuthData } from '@telegram-auth/react';
 
 import { signIn, signOut } from '@/auth';
 import { getUser } from '@/auth'
 import { DueTimeValidation } from './helpers';
-import { TodoField, User} from './definitions';
-import { bot } from './helpers';
-
+import { TELEGRAM_TOKEN, TodoField, User} from './definitions';
 
 const RegistrationFormSchema = z.object({
   name: z.string(),
@@ -171,8 +170,9 @@ redirect('/todos');
 export async function changeTodoStatusToInactive(params: [TodoField, User], prevState: any) {
     // changing todo status to inactive ( active -> inactive )
     const todo = params[0];
-    const user = params[1];
     const todo_id = todo.id;
+    const user = params[1];
+    const user_telegram_id = user.telegram_chat_id;
     const now = new Date();
     try {
         await sql`
@@ -181,14 +181,24 @@ export async function changeTodoStatusToInactive(params: [TodoField, User], prev
                 due_time=${now.toISOString()}
             WHERE id=${todo_id}
         `;
-        const user_telegram_id = user.telegram_chat_id;
-        bot.sendMessage(user_telegram_id, `You have just complited a new todo 📝\n Tag ${todo.tag}\n Title ${todo.title}\n Desc ${todo.text}\n Was finished on ${now.toLocaleString()}\nCongrats 🔥`)
+        if(user_telegram_id !== null) {
+            const message = `You have just complited a new todo 📝\n Tag ${todo.tag}\n Title ${todo.title}\n Desc ${todo.text}\n Was finished on ${now.toLocaleString()}\nCongrats 🔥`;
+            const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`
+            const data = {
+              chat_id: user_telegram_id,
+              text: message,
+              parse_mode : "html"
+            }
+            const options = {json: data}
+            await got.post(url, options);
+        }
     } catch(error) {
       return { message: 'Database Error: Failed to get Todo.' };
     }
     revalidatePath('/todos')
     redirect('/todos');
 }
+
 export async function deleteTodo(id: string) {
   try {
     await sql`DELETE FROM todos WHERE id=${id}`;
@@ -200,7 +210,6 @@ export async function deleteTodo(id: string) {
 }
 
 export async function add_telegram_to_user(data: TelegramAuthData, authorized_user: User) {
-  console.log(data);
     const telegram_username = data.username;
     const telegram_chat_id = data.id;
     try {
@@ -213,4 +222,32 @@ export async function add_telegram_to_user(data: TelegramAuthData, authorized_us
     }
     revalidatePath('/todos/profile');
     redirect('/todos/profile');
+}
+
+export async function checkTodoIsFinished(todo: TodoField, telegram_chat_id: number | null) {
+  const now = new Date();
+  const todo_due_time = new Date(todo.due_time);
+  const user_telegram_id = telegram_chat_id;
+
+  if (todo_due_time < now) {
+      try {
+          await sql`UPDATE todos 
+                  SET is_active=${false},
+                      due_time=${now.toISOString()}
+                  WHERE id=${todo.id}`;
+          if (user_telegram_id !== null) {
+              const message = `Your todo is now finished -_- 📝\n Tag ${todo.tag}\n Title ${todo.title}\n Desc ${todo.text}\n Was finished on ${now.toLocaleString()}\nWe hope you did it till current time 🤔`;
+              const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`
+              const data = {
+                  chat_id: user_telegram_id,
+                  text: message,
+                  parse_mode : "html"
+              }
+              const options = {json: data}
+              await got.post(url, options);
+          }
+      } catch (error) {
+          throw error;
+      }
+  }
 }
