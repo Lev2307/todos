@@ -8,6 +8,7 @@ import { add_telegram_to_user } from "@/app/lib/actions";
 import { User } from "@/app/lib/definitions";
 
 export default async function AuthorizeViaTelegramButton({user}: {user: User}) {
+    console.log(process.env.NEXT_PUBLIC_BOT_USERNAME!)
     return (
         <Suspense fallback={<h1>Loading...</h1>}>
             <div className="mt-2 flex justify-center items-center">
