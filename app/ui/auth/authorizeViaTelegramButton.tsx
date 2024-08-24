@@ -9,11 +9,12 @@ import { User } from "@/app/lib/definitions";
 
 export default async function AuthorizeViaTelegramButton({user}: {user: User}) {
     console.log(process.env.NEXT_PUBLIC_BOT_USERNAME!)
+    console.log("TodosNotificationsBot");
     return (
         <Suspense fallback={<h1>Loading...</h1>}>
             <div className="mt-2 flex justify-center items-center">
                 <LoginButton
-                    botUsername={process.env.NEXT_PUBLIC_BOT_USERNAME!}
+                    botUsername="TodosNotificationsBot"
                     showAvatar={false}
                     onAuthCallback={(data) => {
                         add_telegram_to_user(data, user);
